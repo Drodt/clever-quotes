@@ -1,0 +1,9 @@
+[package]
+name = "<todo>"
+version = "0.0.1"
+entrypoint = "quotes.typ"
+authors = ["Daniel Drodt"]
+license = "MIT"
+description = "Nice quotes"
+repository = "<todo>"
+exclude = ["README.md"]
