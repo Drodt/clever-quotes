@@ -82,17 +82,6 @@
 )
 
 #let default-quote-aliases = (
-    // CsQuotes aliases
-    "american": "english/american",
-    "australian": "english/british",
-    "british": "english/british",
-    "canadian": "english/american",
-    "english": "english/american",
-    "german": "german/quotes",
-    "newzealand": "english/british",
-    "swiss": "german/swiss",
-    "swissgerman": "german/swiss",
-
     // New aliases
     "en": "en/US",
     "de": "de/DE",
@@ -126,7 +115,7 @@
     "pt": "pt/PT",
     "ro": "ro/RO",
     "ru": "ru/RU",
-    "sr": "RS",
+    "sr": "sr/RS",
     "sr|guillemets": "sr/RS|guillemets",
     "sr|german": "sr/RS|german",
     "sk": "sk/SK",
