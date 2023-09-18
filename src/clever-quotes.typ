@@ -2,7 +2,7 @@
 
 #let quote-style = state("quote-style", "en/US")
 #let quote-max-level = state("quote-max-level", 2)
-#let quote-level = state("quote-level", 1)
+#let quote-level = counter("quote-level")
 
 #let _get-style(s) = {
     let sty = s
@@ -55,36 +55,29 @@
         } else {
             _get-style(style)
         }
-        let level = quote-level.at(loc)
         let max-level = quote-max-level.at(loc)
-
-        if inner {
-            level = level + 1
-        }
-
-        if level > max-level {
-            panic("Quotes are nested too deeply. Limit is ", max-level)
-        }
-
-        let is-inner = calc.even(level)
-
-        let (open, close) = if is-inner {
-            (style.at("inner-open"), style.at("inner-close"))
+        let incr = if inner {
+            quote-level.step() + quote-level.step()
         } else {
-            (style.at("outer-open"), style.at("outer-close"))
+            quote-level.step()
         }
+        let content = quote-level.display(lvl => {
+            let is-inner = calc.even(lvl)
 
-        let citation = if cite == none {
-            none
-        } else {
-            [ #cite]
-        }
+            let (open, close) = if is-inner {
+                (style.at("inner-open"), style.at("inner-close"))
+            } else {
+                (style.at("outer-open"), style.at("outer-close"))
+            }
 
-        if inner {
-            level = level - 1
-        }
-        
-        quote-level.update(level + 1) + open + body + close + quote-level.update(level) + citation
+            let citation = if cite == none {
+               none
+            } else {
+                [ #cite]
+            }
+            open + body + close
+        })
+        incr + content + quote-level.update(0)
     })
 }
 
@@ -96,7 +89,7 @@
 /// - body (content): Content inside the quotation marks.
 #let citequote(inner: false, style: auto, cite, body) = quote(inner: inner, style: style, cite: cite, body)
 
-/// Produces a blockquote.
+/// Produces a block quote.
 ///
 /// - cite (content, none): Optional citation content at the end of the quote.
 /// - inset (length, dictionary): How much to pad the block. A passed length will be used as left-padding.
@@ -119,10 +112,10 @@
         [ #cite]
     }
     set text(size: font-size)
-    block(width: 100%, inset: inset, body + citation)
+    quote-level.display() + block(width: 100%, inset: inset, body + citation) + quote-level.display()
 }
 
-/// Produces a blockquote with a citation.
+/// Produces a block quote with a citation.
 ///
 /// - inset (length, dictionary): How much to pad the block. A passed length will be used as left-padding.
 /// - font-size (length): Font size of the block content.
